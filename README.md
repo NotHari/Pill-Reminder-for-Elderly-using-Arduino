@@ -25,6 +25,8 @@ This project features the following features:-
 
 The simulation has been done on Tinkercad.
 
+The link to the Tinkercad simulation can be found [here](https://www.tinkercad.com/things/8QJOU3863y3-review2).
+
 ## Components Used
 
 The components used in Tinkercad are as follows:-
