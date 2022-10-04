@@ -25,7 +25,7 @@ This project features the following features:-
 
 The simulation has been done on Tinkercad.
 
-The link to the Tinkercad simulation can be found [here](https://www.tinkercad.com/things/8QJOU3863y3-review2).
+The link to the Tinkercad simulation can be found [here](https://www.tinkercad.com/things/0bJ8tCCZUKa-review2/editel).
 
 ## Components Used
 
