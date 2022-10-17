@@ -1,7 +1,9 @@
-#include <Adafruit_LiquidCrystal.h>
+#include <Wire.h>
+#include <hd44780.h>                     
+#include <hd44780ioClass/hd44780_I2Cexp.h>
 
-// Initialise LCD Object for 16 x 2 LCD I2C
-Adafruit_LiquidCrystal lcd(0);
+// Initialise LCD Object for 20 x 4 LCD I2C
+hd44780_I2Cexp lcd;
 
 // Pins to Set and Reset alarms
 int onePillButton = 2;
@@ -10,43 +12,49 @@ int threePillButton = 4;
 int reset = 5;
 
 // Pins to Change Time
-int hButton = 6;
-int mButton = 7;
+int mButton = 6;
+int hButton = 7;
 
 // Pins to send Output
 int LED = 12;
 int buzzer = 13;
 
 // Default Time
-int h = 19, m = 59, s = 55;
+int h = 7, m = 59, s = 55;
 
 // Alarm State
 int flag = 0;
 
 void setup()
 {
-    lcd.begin(16, 2);
+    lcd.begin(20, 4);
     pinMode(buzzer, OUTPUT);
-    pinMode(hButton, INPUT_PULLUP);
-    pinMode(mButton, INPUT_PULLUP);
+    pinMode(hButton, INPUT);
+    pinMode(mButton, INPUT);
     pinMode(LED, OUTPUT);
     pinMode(onePillButton, INPUT);
     pinMode(twoPillButton, INPUT);
     pinMode(threePillButton, INPUT);
     pinMode(reset, INPUT);
     lcd.setCursor(0, 0);
-    lcd.print("Welcome to Our");
+    lcd.print("   Welcome to Our   ");
     lcd.setCursor(0, 1);
-    lcd.print("Pill Reminder");
-    delay(100);
+    lcd.print("   Pill Reminder   ");
+    lcd.setCursor(0, 3);
+    lcd.print("     By Group 3     ");
+    delay(3000);
     lcd.clear();
 }
 
 // To print time with formatting
 void printTime()
 {
-    String time = String("Time:");
-    if (h % 12 < 10)
+    String time = String(" Time : ");
+    if(h == 0)
+      time = String(time + "00:");
+    else if(h == 12)
+      time = String(time +  "12:");
+    else if (h % 12 < 10)
         time = String(time + "0" + h % 12 + ":");
     else
         time = String(time + h % 12 + ":");
@@ -66,10 +74,9 @@ void printTime()
     else
         time = String(time + " PM");
 
-    lcd.setCursor(0, 0);
-    lcd.print(time);
+    lcd.clear();
     lcd.setCursor(0, 1);
-    lcd.print("                ");
+    lcd.print(time);
 }
 
 // To increment time after every second
@@ -146,9 +153,11 @@ void setAlarm(int onePillButtonState, int twoPillButtonState, int threePillButto
         flag = 1;
         lcd.clear();
         lcd.setCursor(0, 0);
-        lcd.print("One alarm set");
+        lcd.print(" One alarm set for ");
         lcd.setCursor(0, 1);
-        lcd.print("Get Well Soon");
+        lcd.print("     8AM daily     ");
+        lcd.setCursor(0, 2);
+        lcd.print("   Get Well Soon   ");
     }
     // Sets 8AM and 8PM alarms
     else if (twoPillButtonState == 1)
@@ -156,9 +165,11 @@ void setAlarm(int onePillButtonState, int twoPillButtonState, int threePillButto
         flag = 2;
         lcd.clear();
         lcd.setCursor(0, 0);
-        lcd.print("Two alarms set");
+        lcd.print(" Two alarms set for ");
         lcd.setCursor(0, 1);
-        lcd.print("Get Well Soon");
+        lcd.print(" 8AM and 8PM daily ");
+        lcd.setCursor(0, 2);
+        lcd.print("   Get Well Soon   ");
     }
     // Sets 8AM, 2PM and 8PM alarms
     else if (threePillButtonState == 1)
@@ -166,19 +177,21 @@ void setAlarm(int onePillButtonState, int twoPillButtonState, int threePillButto
         flag = 3;
         lcd.clear();
         lcd.setCursor(0, 0);
-        lcd.print("Three alarms set");
+        lcd.print("Three alarms set for");
         lcd.setCursor(0, 1);
-        lcd.print("Get Well Soon");
+        lcd.print("8AM, 2PM & 8PM daily");
+        lcd.setCursor(0, 2);
+        lcd.print("   Get Well Soon   ");
     }
 
     // Stops Alarm
     if (resetState == 1)
     {
         lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("Alarm Off");
         lcd.setCursor(0, 1);
-        lcd.print("Stay Hydrated");
+        lcd.print("     Alarm Off     ");
+        lcd.setCursor(0, 2);
+        lcd.print("   Stay Hydrated   ");
         digitalWrite(LED, LOW);
         digitalWrite(buzzer, LOW);
     }
@@ -188,17 +201,17 @@ void setAlarm(int onePillButtonState, int twoPillButtonState, int threePillButto
 void playAlarm()
 {
     // Plays 8AM alarm
-    if (flag != 0)
+    if (flag != 0) 
     {
         if (h == 8 && m == 0 && s == 0)
         {
             digitalWrite(LED, HIGH);
             digitalWrite(buzzer, HIGH);
             lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Have 8AM Pill");
             lcd.setCursor(0, 1);
-            lcd.print("Get Well Soon");
+            lcd.print("   Have 8AM Pill   ");
+            lcd.setCursor(0, 2);
+            lcd.print("   Get Well Soon   ");
         }
     }
 
@@ -210,10 +223,10 @@ void playAlarm()
             digitalWrite(LED, HIGH);
             digitalWrite(buzzer, HIGH);
             lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Have 8PM Pill");
             lcd.setCursor(0, 1);
-            lcd.print("Get Well Soon");
+            lcd.print("   Have 8PM Pill   ");
+            lcd.setCursor(0, 2);
+            lcd.print("   Get Well Soon   ");
         }
     }
 
@@ -225,10 +238,10 @@ void playAlarm()
             digitalWrite(LED, HIGH);
             digitalWrite(buzzer, HIGH);
             lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Have 2PM Pill");
             lcd.setCursor(0, 1);
-            lcd.print("Get Well Soon");
+            lcd.print("   Have 2PM Pill   ");
+            lcd.setCursor(0, 2);
+            lcd.print("   Get Well Soon   ");
         }
     }
 }
@@ -248,5 +261,5 @@ void loop()
     setAlarm(onePillButtonState, twoPillButtonState, threePillButtonState, resetState);
     playAlarm();
 
-    delay(750);
+    delay(1000);
 }
