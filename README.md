@@ -1,5 +1,6 @@
 
 # Pill Reminder for Elderly using Arduino
+![image](https://github.com/NotHari/Pill-Reminder-for-Elderly-using-Arduino/blob/main/assets/cover.png)
 
 This repository was made to document the process of implementing a Pill Reminder for Elderly using a Micro-controller and other hardware components for the project as a part of my Microprocessors and Interfacing course.  
 
